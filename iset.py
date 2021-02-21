@@ -1,4 +1,6 @@
-# Get Settings
+"""
+Get Settings
+"""
 import json
 
 path = None
@@ -17,21 +19,6 @@ def create(path):
 
         json.dump(app, obj, indent=True)
         obj.close()
-
-
-"""
-def get(setting):
-    settings = setting.split(sep=".")
-    with open(path, "r") as obj:
-        current = json.load(obj)
-        try:
-            for s in settings:
-                current = current[s]
-            obj.close()
-            return current
-        except:
-            return None
-"""
 
 
 def read():

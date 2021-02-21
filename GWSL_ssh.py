@@ -2,12 +2,11 @@ from tkinter import ttk
 from tkinter import *
 import tkinter as tk
 import time
-
-root = None
-
 from PIL import Image
 import PIL
 import PIL.ImageTk
+
+root = None
 
 asset_dir = "Assets/"
 
@@ -35,7 +34,6 @@ def get_login(machine):
             creds = {"user": user, "pass": passw}
             boxRoot.quit()
             boxRoot.destroy()
-            # boxRoot.running = False
 
     creds = {}
 
@@ -45,8 +43,6 @@ def get_login(machine):
     boxRoot.running = True
     boxRoot.protocol("WM_DELETE_WINDOW", quitter)
 
-    lbl = tk.Label(boxRoot, text="Login:", justify=LEFT)  # , font=("Helvetica", 16))
-    # lbl.grid(row=0, padx=10, sticky="W")
     boxRoot.grid_rowconfigure(0, weight=0)
 
     # First frame
@@ -72,8 +68,6 @@ def get_login(machine):
     link_pass = ttk.Entry(frame_1, show="*")
 
     link_pass.grid(row=1, column=2, padx=10, sticky="WE")
-
-    machines = []
 
     frame_1.grid(row=1, column=0, padx=20, sticky="SWE", columnspan=2)
     frame_1.grid_columnconfigure(2, weight=1)
@@ -105,13 +99,9 @@ def get_login(machine):
     boxRoot.wm_attributes("-topmost", 1)
 
     while True:
-        # draw(canvas, mouse=False)
         time.sleep(0.05)
         boxRoot.update()
         if boxRoot.running == False:
             break
         if creds != {}:
             return creds
-
-
-# print(get_login("raspberrypi"))

@@ -1,5 +1,3 @@
-# import time
-# import os
 from subprocess import PIPE, Popen
 import subprocess
 from threading import Thread
@@ -66,17 +64,6 @@ class cmd:
             queue = Thread(target=active_listener, args=[])
             queue.daemon = True
             queue.start()
-
-        else:
-            p = Popen(command, bufsize=1, universal_newlines=True)
-
-            # print(p.pid)
-            # while True:
-            #    running = get_running("GWSL_plink.exe")
-            #    if running == True:
-            #        time.sleep(1)
-            #    else:
-            #        break
 
     def kill(self):
         self.proc.kill()

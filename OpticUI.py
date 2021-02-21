@@ -2,14 +2,12 @@
 # Copyright Paul-E andOpticos Studios 2020
 
 
-import PIL, os
+import PIL
+import os
 from PIL import ImageFilter as ImageFilterOrig
 from PIL import Image
 from winreg import *
 import imtools, ctypes
-
-# from io import BytesIO
-# import cairosvg
 
 
 pygame = None
@@ -37,20 +35,14 @@ def get_color():
     try:
         # Open the registry
         registry = ConnectRegistry(None, HKEY_CURRENT_USER)
-        # Navigate to the key that contains the accent color info
-        # key = OpenKey(registry, r'SOFTWARE\Microsoft\Windows\DWM')
-        # key_value = QueryValueEx(key,'AccentColor')
 
         key = OpenKey(registry, r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Accent')
-        key_value = QueryValueEx(key, 'StartColorMenu')
         key_value2 = QueryValueEx(key, 'AccentPalette')
         value = key_value2[0]
         import codecs
-        c = codecs.encode(value, "hex")
 
         bins = str(" ".join([hex(ch)[2:] for ch in value])).split(" ")
         bins = [b + "0" if b == "0" else b for b in bins]
-        # print(bins[0] + bins[1] + bins[2])
 
         color = 4
 
@@ -71,23 +63,6 @@ def get_color():
             rgb = [0, 150, 150]
         
         return rgb
-
-        # Junk code
-        """
-        # Convert the interger to Hex and remove its offset
-        accent_int = key_value[0]
-        accent_hex = hex(accent_int + 4278190080)  # Remove FF offset and convert to HEX again
-        accent_hex = str(accent_hex)[5:]  # -1] #Remove prefix and suffix
-
-        accent = accent_hex[4:6] + accent_hex[2:4] + accent_hex[0:2]
-        rgb = hex_to_rgb('#' + accent)
-        rgb = rgb[:2]
-        print(1, rgb)
-        if rgb[0] < 0 or rgb[0] > 255 or rgb[1] < 0 or rgb[1] > 255 or rgb[2] < 0 or rgb[2] > 255:
-            rgb = [0, 200, 200]
-        print(2, rgb)
-        return rgb
-        """
     except:
         print("failing")
         return [0, 200, 200]
@@ -107,7 +82,6 @@ def icon(name, spec=None):
     filename = None  # "assets/chat.png"
     name = name.lower()
     names = None
-    n = 0
     if " " in name:
         names = name.split(" ")
         name = names[0]
@@ -117,7 +91,6 @@ def icon(name, spec=None):
         name = names[0]
         name = name.lower()
 
-    # name = name.replace(" ", "-")
     if names == None:
         names = [name]
     for name in names:
@@ -153,9 +126,6 @@ def icon(name, spec=None):
     try:
         if filename.endswith(".svg") == True:
             pass
-            # out = BytesIO()
-            # cairosvg.svg2png(url=filename, write_to=out)
-            # imager = Image.open(out)
         else:
             try:
                 imager = Image.open(filename)
@@ -179,7 +149,6 @@ def pygame_icon(name, spec=None):
     filename = None  # "assets/chat.png"
     name = name.lower()
     names = None
-    n = 0
     if " " in name:
         names = name.split(" ")
         name = names[0]
@@ -188,7 +157,6 @@ def pygame_icon(name, spec=None):
         names = name.split(".")
         name = names[0]
         name = name.lower()
-    # name = name.replace(" ", "-")
     if names == None:
         names = [name]
     for name in names:
@@ -299,7 +267,6 @@ def iris_light(canvas, pos, size, tint, radius=10, shadow_enabled=True, shadow_s
         canvas.blit(shade, [pos[0] - w(shadow_size * w_expand),
                             pos[1] - h(shadow_size)])
 
-    # b = pygame.transform.rotozoom(b, 0, (100.0 / resolution) * 1)
     b = pygame.transform.scale(b, size)
     b.set_alpha(alpha)
 
@@ -340,10 +307,6 @@ def iris2(canvas, pos, size, tint, radius=10, shadow_enabled=True, rounded=0, sh
     elif intensity < 0:
         intensity = 0
     size = [int(size[0]), int(size[1])]
-    if fancy == False:
-        tnt = list(pygame.transform.average_color(canvas, [0, 0, 50, 50]))[:3]
-
-    resolution = resolution  # percentage of pixels per inch to use. If one inch is 300 pixels, use 150 is var is set to 50%
 
     r = (resolution / 100.0) * inch2pix(1)
 
@@ -375,12 +338,7 @@ def iris2(canvas, pos, size, tint, radius=10, shadow_enabled=True, rounded=0, sh
         b = pygame.image.tostring(s, "RGBA", False)
         b = PIL.Image.frombytes("RGBA", size2, b)
 
-        # b = replace_color(b, [0, 0, 0], [255, 0, 0])
-
         b = b.filter(PIL.ImageFilter.GaussianBlur(radius=int(rad)))
-        # b = b.crop((smooth_pad, smooth_pad, size2[0] - smooth_pad, size2[1] - smooth_pad))
-        # maxsize = (size)
-        # b.thumbnail(maxsize, PIL.Image.ANTIALIAS)
         if size[0] <= 0:
             size[0] = 1
         if size[1] <= 0:
@@ -394,14 +352,6 @@ def iris2(canvas, pos, size, tint, radius=10, shadow_enabled=True, rounded=0, sh
 
     else:
         pass
-        """
-        s.blit(canvas, [0, 0], [pos[0], pos[1], size[0], size[1]])
-        size2 = size
-        pygame.gfxdraw.filled_polygon(s, [[0, 0], [size2[0], 0], size2, [0, size2[1]]], tint + [200])
-        b = s
-        """
-
-    # pygame.draw.rect(canvas, [0, 200, 0], [pos[0], pos[1], size[0], size[1]])
 
     if shadow_enabled == True:
         shadow_default = inch2pix(0.1)
@@ -437,21 +387,11 @@ def iris2(canvas, pos, size, tint, radius=10, shadow_enabled=True, rounded=0, sh
         rotated_b = pygame.transform.rotate(s_edgea, 90)
         canvas.blit(pygame.transform.scale(rotated_b, [size[0], shadow_width]), [pos[0], pos[1] + size[1]])
 
-    # b = pygame.transform.rotozoom(b, 0, (100.0 / resolution) * 1)
-
-    # if fancy == True:
-    #    b = pygame.transform.scale(b, size)
 
     if fancy == True:
         b.set_alpha(alpha)
         canvas.blit(b, pos)  # , special_flags=pygame.BLEND_RGBA_ADD)
     else:
-        """
-        pygame.gfxdraw.filled_polygon(canvas, [pos,
-                                               [pos[0] + size[0], pos[1]],
-                                               [pos[0] + size[0], pos[1] + size[1]],
-                                              [pos[0], pos[1] + size[1]]], tint + [int(50 * (alpha / 255))])
-        """
         if mode == "light":
             pygame.gfxdraw.filled_polygon(canvas, [pos,
                                                    [pos[0] + size[0], pos[1]],
@@ -464,12 +404,6 @@ def iris2(canvas, pos, size, tint, radius=10, shadow_enabled=True, rounded=0, sh
                                                    [pos[0] + size[0], pos[1] + size[1]],
                                                    [pos[0], pos[1] + size[1]]],
                                           [50, 50, 50] + [int(255 * (alpha / 255))])
-        """
-        pygame.gfxdraw.filled_polygon(canvas, [pos,
-                                               [pos[0] + size[0], pos[1]],
-                                               [pos[0] + size[0], pos[1] + size[1]],
-                                               [pos[0], pos[1] + size[1]]], tnt + [int(100 * (alpha / 255))])
-        """
 
 
 def replace_color(img, color):
@@ -498,8 +432,6 @@ def drop_shadow(canvas, surface, posit, radius=2, alpha=255, resolution=100):
 
     size = surface.get_size()
 
-    resolution = resolution  # percentage of pixels per inch to use. If one inch is 300 pixels, use 150 is var is set to 50%
-
     r = (resolution / 100.0) * inch2pix(1)
 
     inches_w = size[0] / inch2pix(1)
@@ -524,7 +456,6 @@ def drop_shadow(canvas, surface, posit, radius=2, alpha=255, resolution=100):
     b = replace_color(b, [0, 0, 0])
 
     b = b.filter(PIL.ImageFilter.GaussianBlur(radius=int(rad)))
-    # b = b.crop((smooth_pad, smooth_pad, size2[0] - smooth_pad, size2[1] - smooth_pad))
 
     if size[0] <= 0:
         size[0] = 1
@@ -604,22 +535,16 @@ font_scale = 1
 def font(font_name, size):
     global font_names
     font_size = int(size * font_scale)
-    ##print(font_names)
     if font_name not in font_names:
-        font = fonter(font_name, font_size)  # pygame.font.Font
-        ##print("new name")
+        font = fonter(font_name, font_size)
         font_names.update({font_name: {font_size: font}})
     elif font_name in font_names:
         current_font_name = font_names[font_name]
         if font_size not in current_font_name:
-            font = fonter(font_name, font_size)  # pygame.font.Font
+            font = fonter(font_name, font_size)
             font_names[font_name].update({font_size: font})
-            ##print("new_size_needed")
-
         elif font_size in current_font_name:
-            ##print("font_exists")
             font = current_font_name[font_size]
-
     return font
 
 
@@ -644,8 +569,6 @@ def set_scale(scale_factor):
 
 
 def get_ppi():
-    # root = tkinter.Tk()
-    # root.withdraw()
     ppi = 96
     sysDpi = ctypes.windll.user32.GetDpiForSystem()
     sf = sysDpi / 96  # root.winfo_id()) / 96
@@ -655,8 +578,6 @@ def get_ppi():
 
 def init(scale_mode):  # , tk, tk_root):
     global WIDTH, HEIGHT, scalemode, ppi, font_scale  # , tkinter, root
-    # root = tk_root
-    # tkinter = tk
     scalemode = scale_mode
     ppi = get_ppi()
 

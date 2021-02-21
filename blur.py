@@ -67,7 +67,6 @@ accent = ACCENTPOLICY()
 
 accent.AccentState = ACCENTSTATE.ACCENT_ENABLE_ACRYLICBLURBEHIND
 accent.GradientColor = ctypes.c_uint(0xCC000000)
-#accent.AccentFlags = 2
 accentStructSize = ctypes.sizeof(accent)
 
 data = WINDOWCOMPOSITIONATTRIBDATA()
@@ -79,4 +78,3 @@ data.Data = ctypes.cast(ctypes.pointer(accent), ctypes.POINTER(ctypes.c_int))
 
 def blur(HWND):
     return user32.SetWindowCompositionAttribute(ctypes.cast(HWND, ctypes.POINTER(ctypes.c_int)), ctypes.byref(data))
-    # print(ctypes.GetLastError())

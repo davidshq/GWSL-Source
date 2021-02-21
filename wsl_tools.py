@@ -40,20 +40,8 @@ def get_themes(machine):
 
 
 def get_apps(machine):
-    # try:
-    #    os.remove(script[:-15] + ".scanapps")
-    # except:
-    #    pass
     cmd = 'wsl.exe -d ' + str(machine) + ' "' + str(pat_con(script)) + '" listapps'
     read = os.popen(cmd).read()
-    # print("copy")
-    # cmd2 = 'wsl.exe -d ' + str(machine) + ' cp ~/.scanapps ' + str(pat_con(script[:-15]))
-    # subprocess.getoutput(cmd2)
-    # print("read")
-    # try:
-    #    read = open(script[:-15] + ".scanapps", "r").read()
-    # except:
-    #    return {}
 
     read = read.split("/:/")
     read[:] = (value for value in read if value != "\n")
