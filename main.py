@@ -1,4 +1,9 @@
-# GWSL Service
+"""
+GWSL Service
+
+Copyright Paul-E/Opticos Studios 2020
+https://opticos.github.io/gwsl/
+"""
 
 import os
 import subprocess
@@ -7,11 +12,11 @@ import time
 import keyboard
 
 import GWSL_profiles as profile
-# Copyright Paul-E/Opticos Studios 2020
-# https://opticos.github.io/gwsl/
 import iset
 import pymsgbox
 from systray import SysTrayIcon as tray
+from winreg import *
+from winreg import CloseKey, ConnectRegistry, CreateKey, OpenKey, QueryValue, QueryValueEx, SetValueEx
 
 frozen = 'not'
 if getattr(sys, 'frozen', False):
@@ -43,14 +48,14 @@ profile_dict = {}
 custom_profiles = []
 
 # DPI Stuff
-from winreg import *
-from winreg import CloseKey, ConnectRegistry, CreateKey, OpenKey, QueryValue, QueryValueEx, SetValueEx
 modes = ["~ HIGHDPIAWARE", "~ DPIUNAWARE", "~ GDIDPISCALING DPIUNAWARE"]
 REG_PATH = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
 
 
 def set_reg(name, value):
-    """Set DPI via registry key"""
+    """
+    Set DPI via registry key
+    """
     try:
         CreateKey(HKEY_CURRENT_USER, REG_PATH)
         registry_key = OpenKey(HKEY_CURRENT_USER, REG_PATH, 0, KEY_WRITE)
@@ -62,7 +67,9 @@ def set_reg(name, value):
     
 
 def rescan(systray=False):
-    """Rescan profiles"""
+    """
+    Rescan profiles
+    """
     global profile_dict, custom_profiles
     try:
         sett = iset.read()
@@ -77,11 +84,18 @@ def rescan(systray=False):
 
 
 def get_args(profile_name):
-    """Get defaults for launching VCXSRV"""
+    """
+    Get defaults for launching VCXSRV
+    """
     return profile_dict[profile_name]
 
 
 def open_about(systray):
+    """
+    Open About Window
+    :param systray:
+    :return:
+    """
     try:
         subprocess.Popen(bundle_dir + "\\GWSL.exe --about")
     except:
@@ -89,6 +103,11 @@ def open_about(systray):
 
 
 def open_dashboard(*args):
+    """
+    Open Dashboard
+    :param args:
+    :return:
+    """
     try:
         subprocess.Popen(bundle_dir + "\\GWSL.exe")
     except:
@@ -96,17 +115,26 @@ def open_dashboard(*args):
 
 
 def shutdown(systray):
+    """
+    Exit service
+    :param systray:
+    :return:
+    """
     global exiter
     exiter = True
 
 
 def icon(name):
-    """Returns path of named icon"""
+    """
+    Returns path of named icon
+    """
     return f"{bundle_dir}\\assets\\systray\\{name}.ico"
 
 
 def set_custom_profile(systray, profile):
-    """Switch to custom profile"""
+    """
+    Switch to custom profile
+    """
     global current_custom_profile, display_mode
     try:
         if profile == current_custom_profile:
@@ -128,7 +156,9 @@ def set_custom_profile(systray, profile):
 
 
 def set_default_profile(systray, mode_type):
-    """Sets the default XServer display mode (single, multi, fullscreen"""
+    """
+    Sets the default XServer display mode (single, multi, fullscreen
+    """
     global current_custom_profile, display_mode
     try:
         if mode_type == display_mode:
@@ -152,7 +182,9 @@ def set_default_profile(systray, mode_type):
 
 
 def toggle_clipboard(systray, state):
-    """Toggles the clipboard between Windows and WSL graphical apps being on/off."""
+    """
+    Toggles the clipboard between Windows and WSL graphical apps being on/off.
+    """
     global clipboard
     try:
         if state == True:
@@ -173,7 +205,9 @@ def toggle_clipboard(systray, state):
 
 
 def config():
-    """Open the config file for GWSL (settings.json)"""
+    """
+    Open the config file for GWSL (settings.json)
+    """
     try:
         path = os.getenv('APPDATA') + "\\GWSL\\"
         os.popen(f"{path}settings.json")
@@ -182,7 +216,9 @@ def config():
 
 
 def open_logs():
-    """Launches Notepad to view GWSL logs"""
+    """
+    Launches Notepad to view GWSL logs
+    """
     try:
         path = os.getenv('APPDATA') + "\\GWSL\\"
         subprocess.Popen(f"notepad {path}service.log")
@@ -192,13 +228,17 @@ def open_logs():
 
 
 def open_help(s):
-    """Open browser to GWSL help page"""
+    """
+    Open browser to GWSL help page
+    """
     import webbrowser
     webbrowser.get('windows-default').open('https://opticos.github.io/gwsl/help.html')
 
 
 def add_profile(systray):
-    """Allows one to add a custom XServer profile (config)"""
+    """
+    Allows one to add a custom XServer profile (config)
+    """
     try:
         new_profile = profile.add(bundle_dir)
         if new_profile != None:
@@ -215,7 +255,9 @@ def add_profile(systray):
 
 
 def dpi_set(mode):
-    """Modifies the DPI registry key in Windows"""
+    """
+    Modifies the DPI registry key in Windows
+    """
     server_location = f"{bundle_dir}\\VCXSRV\\GWSL_vcxsrv.exe"
     instance_location = f"{bundle_dir}\\VCXSRV\\GWSL_instance.exe"
     print(server_location)
@@ -231,7 +273,9 @@ def dpi_set(mode):
 
 
 def reset_config(systray):
-    """Resets settings.json to original config, clears GWSL logs"""
+    """
+    Resets settings.json to original config, clears GWSL logs
+    """
     global exiter
     if ask_reset():
         try:
@@ -262,7 +306,9 @@ def reset_config(systray):
 
 
 def build_menu():
-    """Builds the configuration menu"""
+    """
+    Builds the configuration menu
+    """
     try:
         menu = []
 
@@ -322,7 +368,9 @@ def build_menu():
 
 
 def ask():
-    """Prompts user to confirm switching XServer profiles"""
+    """
+    Prompts user to confirm switching XServer profiles
+    """
     choice = pymsgbox.confirm(text="Switch XServer profiles? Be sure to save any work open in GWSL programs. "
                                    "This might force-close some windows.",
                               title="Switch Profile",
@@ -334,7 +382,9 @@ def ask():
 
 
 def ask_clip(phrase):
-    """Prompts user to confirm enabling/disabling the shared clipboard"""
+    """
+    Prompts user to confirm enabling/disabling the shared clipboard
+    """
     choice = pymsgbox.confirm(text="Toggle the shared clipboard? Be sure to save any work open in GWSL programs. "
                                    "This might force-close some windows.",
                               title=f"{phrase} Clipboard",
@@ -346,7 +396,9 @@ def ask_clip(phrase):
 
 
 def ask_dpi():
-    """Prompts user to confirm changing DPI"""
+    """
+    Prompts user to confirm changing DPI
+    """
     choice = pymsgbox.confirm(text="To apply changes, the GWSL will close. Be sure to save any work open in GWSL "
                                    "programs. This will force close windows running in GWSL. Restart now?",
                               title=f"Restart XServer to Apply Changes?",
@@ -358,7 +410,9 @@ def ask_dpi():
 
 
 def ask_reset():
-    """Prompts user to confirm clearing logs and resetting config"""
+    """
+    Prompts user to confirm clearing logs and resetting config
+    """
     choice = pymsgbox.confirm(text="Delete GWSL logs and reset configuration? This will not delete shortcuts. "
                                    "The GWSL XServer will need to be restarted. Be sure to save any work open in GWSL "
                                    "programs. This will force close windows running in GWSL.",
@@ -371,7 +425,9 @@ def ask_reset():
 
 
 def ask_restart():
-    """Prompts user to confirm restarting the GWSL service"""
+    """
+    Prompts user to confirm restarting the GWSL service
+    """
     answer = pymsgbox.confirm(
         text="Hmm... The GWSL service just crashed or was closed. Do you want to restart the service?",
         title="XServer Has Stopped",
@@ -383,19 +439,25 @@ def ask_restart():
 
 
 def restart_server():
-    """Restarts GWSL services"""
+    """
+    Restarts GWSL services
+    """
     kill_server()
     start_server()
 
 
 def kill_server():
-    """Stops the GWSL services"""
+    """
+    Stops the GWSL services
+    """
     subprocess.getoutput('taskkill /F /IM vcxsrv.exe')
     subprocess.getoutput('taskkill /F /IM GWSL_vcxsrv.exe')
 
 
 def start_server():
-    """Starts the GWSL services"""
+    """
+    Starts the GWSL services
+    """
     try:
         if display_mode != "c":
             default_arguments = default_profiles[display_mode]
@@ -413,7 +475,9 @@ def start_server():
 
 
 def get_running():
-    """Checks whether the GWSL service is currently running"""
+    """
+    Checks whether the GWSL service is currently running
+    """
     proc_list = os.popen('tasklist').readlines()
     for proc in proc_list:
         if "GWSL_vcxsrv" in proc:
@@ -422,7 +486,9 @@ def get_running():
 
 
 def main():
-    """Main entry point for application"""
+    """
+    Main entry point for application
+    """
     global systray, display_mode, clipboard, exiter, ic, timer
     # Kill VcXsrv if already running
     if get_running():

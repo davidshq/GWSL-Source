@@ -1,5 +1,9 @@
 # GWSL Source
 
+## Simplify Branch
+As part of a refactor I'm removing code that isn't core to GWSL's functionality in an attempt to better expose the core
+functions and allow easier testability. Expect to see code primarily removed.
+
 ## What is GWSL?
 GWSL automates the process of running X on top of WSL and over SSH:
 *  It lets you easily run graphical Linux apps on Windows 10.
