@@ -2,7 +2,6 @@
 """
 Singleton
 """
-from multiprocessing import Process
 import os
 import sys
 import tempfile
@@ -23,7 +22,7 @@ class SingleInstance(object):
     If you want to prevent your script from running in parallel just instantiate SingleInstance() class. If is there
     another instance already running it will throw a `SingleInstanceException`.
 
-    >>> import tendo
+    # >>> import tendo
     ... me = SingleInstance()
 
     This option is very useful if you have scripts executed by crontab at small amounts of time.
@@ -56,7 +55,7 @@ class SingleInstance(object):
             except OSError:
                 type, e, tb = sys.exc_info()
                 if e.errno == 13:
-                    #logger.error(
+                    # logger.error(
                     #    "Another instance is already running, quitting.")
                     raise SingleInstanceException()
                 print(e.errno)

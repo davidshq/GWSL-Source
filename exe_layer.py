@@ -11,13 +11,13 @@ class cmd:
         self.q = []
         self.done = False
         self.error = False
-        if console == False:
+        if not console:
             self.start(command, shell=False)
         else:
             self.start(command, shell=True)
 
     def start(self, command, shell=False):
-        if shell == False:
+        if not shell:
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
             startupinfo.wShowWindow = subprocess.SW_HIDE
@@ -69,8 +69,8 @@ class cmd:
         self.proc.kill()
 
     def run(self, command, wait=False, ident=None):
-        if self.proc != None and self.console == False:
-            if wait == True:
+        if self.proc is not None and self.console == False:
+            if wait:
                 command += " &"
             if " " in command:
                 commands = command.split(" ")
@@ -81,6 +81,6 @@ class cmd:
             else:
                 self.proc.stdin.write(command + " \n")
 
-            if wait == True:
+            if wait:
                 self.q.append(ident)
                 self.proc.stdin.write("wait \n")

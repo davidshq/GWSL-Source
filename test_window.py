@@ -22,5 +22,5 @@ while True:
 
     pygame.draw.circle(screen, [255, 0, 0], [100, 100], 50)
 
-    canvas.blit(screen, [0, 0], special_flags=(pygame.BLEND_RGBA_ADD))
+    canvas.blit(screen, [0, 0], special_flags=pygame.BLEND_RGBA_ADD)
 

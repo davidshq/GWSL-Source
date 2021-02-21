@@ -16,7 +16,7 @@ import iset
 import pymsgbox
 from systray import SysTrayIcon as tray
 from winreg import *
-from winreg import CloseKey, ConnectRegistry, CreateKey, OpenKey, QueryValue, QueryValueEx, SetValueEx
+from winreg import CloseKey, CreateKey, OpenKey, SetValueEx
 
 frozen = 'not'
 if getattr(sys, 'frozen', False):
@@ -74,7 +74,7 @@ def rescan(systray=False):
     try:
         sett = iset.read()
         profile_dict = sett["xserver_profiles"]
-        if systray != False:
+        if systray:
             menu = build_menu()
             systray.update(menu_options=menu)
         custom_profiles = list(profile_dict)
@@ -90,10 +90,9 @@ def get_args(profile_name):
     return profile_dict[profile_name]
 
 
-def open_about(systray):
+def open_about():
     """
     Open About Window
-    :param systray:
     :return:
     """
     try:
@@ -102,10 +101,9 @@ def open_about(systray):
         logger.exception("Exception occurred")
 
 
-def open_dashboard(*args):
+def open_dashboard():
     """
     Open Dashboard
-    :param args:
     :return:
     """
     try:
@@ -114,10 +112,9 @@ def open_dashboard(*args):
         logger.exception("Exception occurred")
 
 
-def shutdown(systray):
+def shutdown():
     """
     Exit service
-    :param systray:
     :return:
     """
     global exiter
@@ -187,7 +184,7 @@ def toggle_clipboard(systray, state):
     """
     global clipboard
     try:
-        if state == True:
+        if state:
             phrase = "Enable"
         else:
             phrase = "Disable"
@@ -227,7 +224,7 @@ def open_logs():
         logger.exception("Exception occurred - Cannot Open Logs")
 
 
-def open_help(s):
+def open_help():
     """
     Open browser to GWSL help page
     """
@@ -241,7 +238,7 @@ def add_profile(systray):
     """
     try:
         new_profile = profile.add(bundle_dir)
-        if new_profile != None:
+        if new_profile is not None:
             name = new_profile["name"]
             arguments = new_profile["args"].split(" ")
             sett = iset.read()
@@ -268,7 +265,7 @@ def dpi_set(mode):
     except:
         logger.exception("Exception occurred - Cannot Change DPI (dpi_set)")
 
-    if ask_dpi() == True:
+    if ask_dpi():
         restart_server()
 
 

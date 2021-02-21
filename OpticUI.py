@@ -1,13 +1,12 @@
 # OpticUI 1.0
 # Copyright Paul-E andOpticos Studios 2020
 
-
 import PIL
 import os
-from PIL import ImageFilter as ImageFilterOrig
 from PIL import Image
 from winreg import *
-import imtools, ctypes
+import imtools
+import ctypes
 
 
 pygame = None
@@ -91,7 +90,7 @@ def icon(name, spec=None):
         name = names[0]
         name = name.lower()
 
-    if names == None:
+    if names is None:
         names = [name]
     for name in names:
         for f in icons:
@@ -107,24 +106,24 @@ def icon(name, spec=None):
             elif str(name) == files[0]:
                 filename = full
             elif name in full:
-                if spec == None:
+                if spec is None:
                     filename = full
                     break
                 else:
                     if spec in full:
                         filename = full
                         break
-            if filename != None:
+            if filename is not None:
                 break
-        if filename != None:
+        if filename is not None:
             break
 
-    if filename == None:
+    if filename is None:
         filename = "link.png"
     if name == "":
         filename = "link.png"
     try:
-        if filename.endswith(".svg") == True:
+        if filename.endswith(".svg"):
             pass
         else:
             try:
@@ -157,7 +156,7 @@ def pygame_icon(name, spec=None):
         names = name.split(".")
         name = names[0]
         name = name.lower()
-    if names == None:
+    if names is None:
         names = [name]
     for name in names:
         for f in icons:
@@ -173,19 +172,19 @@ def pygame_icon(name, spec=None):
             elif str(name) == files[0]:
                 filename = full
             elif name in full:
-                if spec == None:
+                if spec is None:
                     filename = full
                     break
                 else:
                     if spec in full:
                         filename = full
                         break
-            if filename != None:
+            if filename is not None:
                 break
-        if filename != None:
+        if filename is not None:
             break
 
-    if filename == None or filename == "":
+    if filename is None or filename == "":
         filename = asset_dir + "\\link.png"
 
     try:
@@ -219,7 +218,7 @@ def iris(canvas, pos, size, tint, radius=10, shadow_enabled=True, shadow_size=0.
     b = pygame.image.frombuffer(b.tobytes(), b.size, b.mode).convert()
     b.set_alpha(alpha)
 
-    if shadow_enabled == True:
+    if shadow_enabled:
         w_expand = (size[0] / size[1]) - 1
         if w_expand == 0:
             w_expand = 1
@@ -254,7 +253,7 @@ def iris_light(canvas, pos, size, tint, radius=10, shadow_enabled=True, shadow_s
     b = b.filter(PIL.ImageFilter.GaussianBlur(radius=int(rad)))
     b = pygame.image.frombuffer(b.tobytes(), b.size, b.mode).convert_alpha()
 
-    if shadow_enabled == True:
+    if shadow_enabled:
         w_expand = (size[0] / size[1]) - 1
         if w_expand == 0:
             w_expand = 1
@@ -284,7 +283,7 @@ def set_blur(blur_on):
 
 def toggle_quality():
     global fancy
-    if fancy == True:
+    if fancy:
         fancy = False
     else:
         fancy = True
@@ -316,19 +315,19 @@ def iris2(canvas, pos, size, tint, radius=10, shadow_enabled=True, rounded=0, sh
 
     resolution = (r2 / size[0]) * 100
     smooth_pad = 0
-    if anti_glitch == True:
+    if anti_glitch:
         smooth_pad = 5
 
-    if fancy == False:
+    if not fancy:
         smooth_pad = 0
     s = pygame.Surface([size[0] + int(2 * smooth_pad), size[1] + int(2 * smooth_pad)])  # , pygame.SRCALPHA)
 
-    if fancy == True:
+    if fancy:
         s.blit(canvas, [0, 0], [pos[0] - smooth_pad, pos[1] - smooth_pad, size[0] + smooth_pad * 2,
                                 size[1] + smooth_pad * 2])  # , special_flags=pygame.BLEND_RGBA_ADD)
         s = pygame.transform.rotozoom(s, 0, (resolution / 100.0) * 1)
         size2 = s.get_size()
-        if tint != False:
+        if tint:
             pygame.gfxdraw.filled_polygon(s, [[0, 0], [size2[0], 0], size2, [0, size2[1]]], tint + [intensity])
         if mode == "light":
             pygame.gfxdraw.filled_polygon(s, [[0, 0], [size2[0], 0], size2, [0, size2[1]]],
@@ -353,7 +352,7 @@ def iris2(canvas, pos, size, tint, radius=10, shadow_enabled=True, rounded=0, sh
     else:
         pass
 
-    if shadow_enabled == True:
+    if shadow_enabled:
         shadow_default = inch2pix(0.1)
         shadow_width = int(shadow_default * shadow_size)
         # Corners
@@ -387,8 +386,7 @@ def iris2(canvas, pos, size, tint, radius=10, shadow_enabled=True, rounded=0, sh
         rotated_b = pygame.transform.rotate(s_edgea, 90)
         canvas.blit(pygame.transform.scale(rotated_b, [size[0], shadow_width]), [pos[0], pos[1] + size[1]])
 
-
-    if fancy == True:
+    if fancy:
         b.set_alpha(alpha)
         canvas.blit(b, pos)  # , special_flags=pygame.BLEND_RGBA_ADD)
     else:
@@ -425,10 +423,6 @@ def add_shadow(surface):
 def drop_shadow(canvas, surface, posit, radius=2, alpha=255, resolution=100):
     global fancy, mode
     intensity = int((alpha / 255) * 30)
-    if intensity > 255:
-        intensity = 255
-    elif intensity < 0:
-        intensity = 0
 
     size = surface.get_size()
 
@@ -586,6 +580,7 @@ def start_graphics(pg, assets):
     global s_edge, s_corner, pygame, asset_dir, fonter
     pygame = pg
     import pygame.gfxdraw
+
     class fonter(pygame.font.Font):
         font.bold = False
         font.italic = False
@@ -609,7 +604,7 @@ def inch2pix(inches):
 def h(proportion):
     global WIDTH, HEIGHT
     if scalemode == "dpi":
-        p = (proportion) * ppi * scale
+        p = proportion * ppi * scale
     elif scalemode == "stretch":
         p = float(proportion) * (HEIGHT / 600.0)
 
@@ -619,7 +614,7 @@ def h(proportion):
 def w(proportion):
     global WIDTH, HEIGHT
     if scalemode == "dpi":
-        p = (proportion) * ppi * scale
+        p = proportion * ppi * scale
     elif scalemode == "stretch":
         p = float(proportion) * (WIDTH / 900.0)
 

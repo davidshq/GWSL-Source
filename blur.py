@@ -1,6 +1,5 @@
 # WIN32BLUR
 import ctypes
-from enum import IntEnum, Enum
 
 user32 = ctypes.windll.user32
 c_ulong = ctypes.c_ulong

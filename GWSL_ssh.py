@@ -26,7 +26,7 @@ def get_login(machine):
         boxRoot.running = False
         return None
 
-    def login(*args):
+    def login():
         nonlocal creds
         passw = link_pass.get()
         user = link_user.get()
@@ -101,7 +101,7 @@ def get_login(machine):
     while True:
         time.sleep(0.05)
         boxRoot.update()
-        if boxRoot.running == False:
+        if not boxRoot.running:
             break
         if creds != {}:
             return creds

@@ -10,8 +10,6 @@ import PIL
 import PIL.ImageTk
 
 
-
-
 def add(asset_dir):
     if root:
         root.withdraw()
@@ -32,12 +30,11 @@ def add(asset_dir):
         passw = link_pass.get()
         user = link_user.get()
         if var.get() == 1:
-            passw += (" -notrayicon")
+            passw += " -notrayicon"
         if user != "" and passw != "":
             options = {"name": user, "args": passw}
             boxRoot.quit()
             boxRoot.destroy()
-            # boxRoot.running = False
 
     boxRoot.title("XServer Profile Creator")
     boxRoot.iconname("Dialog")
@@ -45,8 +42,6 @@ def add(asset_dir):
     boxRoot.running = True
     boxRoot.protocol("WM_DELETE_WINDOW", quitter)
     options = {}
-    lbl = tk.Label(boxRoot, text="Add", justify=LEFT)  # , font=("Helvetica", 16))
-    # lbl.grid(row=0, padx=10, sticky="W")
     boxRoot.grid_rowconfigure(0, weight=0)
 
     # First frame
@@ -80,16 +75,10 @@ def add(asset_dir):
 
     var.set(1)
 
-    #hide_systray.configure(state='enabled')
-
     hide_systray.grid(row=2, column=2, columnspan=4, padx=10, sticky="WE")
     
-    tk.Label(frame_1, text='(Please leave the display port number untouched and do not use -ac or -[no]trayicon)').grid(row=3, column=1,
-                                                                                                       columnspan=4,
-                                                                                                 padx=10,
-                                                                                                       sticky="W")
-
-    machines = []
+    tk.Label(frame_1, text='(Please leave the display port number untouched and '
+                           'do not use -ac or -[no]trayicon)').grid(row=3, column=1, columnspan=4, padx=10, sticky="W")
 
     frame_1.grid(row=1, column=0, padx=20, sticky="SWE", columnspan=2)
     frame_1.grid_columnconfigure(2, weight=1)
@@ -124,7 +113,7 @@ def add(asset_dir):
         # draw(canvas, mouse=False)
         time.sleep(0.05)
         boxRoot.update()
-        if boxRoot.running == False:
+        if not boxRoot.running:
             break
         if options != {}:
             return options
